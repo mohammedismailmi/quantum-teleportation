@@ -27,7 +27,6 @@ Discovered by Bennett, Brassard, Crépeau, Jozsa, Peres, and Wootters (1993), qu
 4. **Feed-Forward Unitary Pauli Correction**: Bob applies $U = Z^{c_0} X^{c_1}$ to his qubit $Y$, deterministically restoring Alice's original state with **100% mathematical fidelity**:
 
 | Alice's Measurement $(c_0, c_1)$ | Bell Projection | Bob's Collapsed State | Bob's Pauli Correction $U$ | Final State $|\psi\rangle_Y$ |
-| :---: | :---: | :---: | :---: | :---: |
 --
 | **`00`** | $|\Phi^+\rangle = \frac{\|00\rangle + \|11\rangle}{\sqrt{2}}$ | $\alpha\|0\rangle + \beta\|1\rangle$ | $I$ (Identity) | $\alpha\|0\rangle + \beta\|1\rangle$ |
 --
