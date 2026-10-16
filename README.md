@@ -1,174 +1,188 @@
 # Quantum Teleportation — From Alice to Bob
+### Interactive Educational Simulator & Real IBM Quantum Hardware Telemetry
 
-Formal interactive educational quantum teleportation application built with **React**, **FastAPI**, and **IBM Qiskit / Qiskit Aer**.
+> A formal, publication-grade interactive quantum application built for the **IBM Qiskit Fall Fest 2026 at RV University**. Powered by **React**, **FastAPI**, **Qiskit 1.x**, and **Qiskit Aer**, with live integration to physical IBM Quantum QPUs (`ibm_kingston`, `ibm_marrakesh`, `ibm_fez`).
 
-Designed with a formal publication-grade blue and white theme:
-- Primary Navy Blue `b1`: `rgb(27, 70, 140)` (`#1B468C`)
-- Deep Imperial Navy Blue `b2`: `rgb(0, 0, 93)` (`#00005D`)
-- Pure Crisp White: `#FFFFFF`
-- Pure academic typography with zero logos.
+---
 
-## Quickstart
+## 👥 Team Members
+- **Mohammed Ismail** ([@mohammedismailmi](https://github.com/mohammedismailmi)) — *Project Lead & Quantum Software Engineer*
+- **RV University Qiskit Fall Fest Team**
 
-### 1. Run the Full-Stack Application
+---
+
+## 🔬 Problem & Concept
+
+### The Quantum Challenge
+In classical computing, copying data is trivial. In quantum information theory, the **No-Cloning Theorem** (Wootters & Zurek, 1982) proves that an unknown, arbitrary pure quantum state cannot be duplicated:
+
+$$\mathcal{U}_{\text{clone}} |\psi\rangle |0\rangle \ne |\psi\rangle |\psi\rangle$$
+
+Furthermore, quantum states cannot be directly measured without irreversibly collapsing their wavefunctions, destroying the superposition and phase information.
+
+### The Solution: Quantum Teleportation Protocol
+Discovered by Bennett, Brassard, Crépeau, Jozsa, Peres, and Wootters (1993), quantum teleportation disassembles an arbitrary message qubit $|\psi\rangle = \alpha|0\rangle + \beta|1\rangle$ using:
+1. **1 Shared Bell State (EPR Entanglement)**: $|\Phi^+\rangle_{MY} = \frac{1}{\sqrt{2}}(|00\rangle + |11\rangle)$ shared between Alice (qubit $M$) and Bob (qubit $Y$).
+2. **Bell Basis Joint Measurement**: Alice applies a CNOT gate from message qubit $Q$ to $M$, followed by a Hadamard on $Q$, and measures both qubits in the computational basis.
+3. **2 Classical Bits of Communication**: Alice transmits classical bits $(c_0, c_1)$ to Bob over an ordinary channel (obeying relativistic causality, $v \le c$).
+4. **Feed-Forward Unitary Pauli Correction**: Bob applies $U = Z^{c_0} X^{c_1}$ to his qubit $Y$, deterministically restoring Alice's original state with **100% mathematical fidelity**:
+
+| Alice's Measurement $(c_0, c_1)$ | Bell Projection | Bob's Collapsed State | Bob's Pauli Correction $U$ | Final State $|\psi\rangle_Y$ |
+| :---: | :---: | :---: | :---: | :---: |
+| **`00`** | $|\Phi^+\rangle = \frac{\|00\rangle + \|11\rangle}{\sqrt{2}}$ | $\alpha\|0\rangle + \beta\|1\rangle$ | $I$ (Identity) | $\alpha\|0\rangle + \beta\|1\rangle$ |
+| **`01`** | $|\Psi^+\rangle = \frac{\|01\rangle + \|10\rangle}{\sqrt{2}}$ | $\beta\|0\rangle + \alpha\|1\rangle$ | $X$ (Bit-flip) | $\alpha\|0\rangle + \beta\|1\rangle$ |
+| **`10`** | $|\Phi^-\rangle = \frac{\|00\rangle - \|11\rangle}{\sqrt{2}}$ | $\alpha\|0\rangle - \beta\|1\rangle$ | $Z$ (Phase-flip) | $\alpha\|0\rangle + \beta\|1\rangle$ |
+| **`11`** | $|\Psi^-\rangle = \frac{\|01\rangle - \|10\rangle}{\sqrt{2}}$ | $\beta\|0\rangle - \alpha\|1\rangle$ | $XZ$ (Bit & Phase) | $\alpha\|0\rangle + \beta\|1\rangle$ |
+
+---
+
+## 🛠️ Setup & Installation
+
+### Prerequisites
+- **Python**: Version `3.10` or higher
+- **Node.js**: Version `18.0` or higher (with `npm`)
+- **Git**
+
+### Installation Steps
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/mohammedismailmi/quantum-teleportation.git
+   cd quantum-teleportation
+   ```
+
+2. **Set up Python Virtual Environment:**
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+
+3. **Install Frontend Dependencies:**
+   ```bash
+   cd frontend
+   npm install
+   npm run build
+   cd ..
+   ```
+
+---
+
+## 🚀 How to Run the Code
+
+### 1. Launch the Full-Stack Application (Recommended)
+Start the FastAPI server, which hosts both the computational API and the compiled React production SPA:
 ```bash
-# Start the FastAPI computational backend (serves both API & React SPA on port 8000)
-.venv/bin/uvicorn server:app --host 127.0.0.1 --port 8000 --reload
+source .venv/bin/activate
+uvicorn server:app --host 127.0.0.1 --port 8000 --reload
 ```
-Open **`http://localhost:8000`** in your browser.
+Open **[http://localhost:8000](http://localhost:8000)** in your browser.
 
-### 2. Optional: Run Vite Frontend in Development Mode
+### 2. Run the Vite Frontend in Development Mode (Hot-Reload)
+In a separate terminal window:
 ```bash
 cd frontend
 npm run dev
 ```
-Open **`http://localhost:5173`** with hot module replacement (HMR).
+Open **[http://localhost:5173](http://localhost:5173)** with Hot Module Replacement (HMR).
 
-## The Quantum Teleportation Protocol
-
-Quantum teleportation transfers an unknown quantum state |ψ⟩ = α|0⟩ + β|1⟩ from Alice to Bob without directly sending the qubit. The protocol uses:
-
-1. **A shared Bell pair** |Φ⁺⟩ = (|00⟩ + |11⟩)/√2 between Alice and Bob
-2. **A Bell measurement** by Alice on her two qubits
-3. **Two classical bits** communicated from Alice to Bob
-4. **Correction gates** applied by Bob based on Alice's measurement
-
-### Three Qubits
-
-| Qubit | Index | Role | Owner |
-|-------|-------|------|-------|
-| **Q** | 0 | Message qubit | Alice |
-| **M** | 1 | Bell pair half | Alice |
-| **Y** | 2 | Bell pair half | Bob |
-
-### Correction Mapping
-
-| Outcome (Q, M) | Bob's Conditional State | Correction |
-|:---:|:---|:---:|
-| 00 | α\|0⟩ + β\|1⟩ | I |
-| 01 | β\|0⟩ + α\|1⟩ | X |
-| 10 | α\|0⟩ − β\|1⟩ | Z |
-| 11 | −β\|0⟩ + α\|1⟩ | XZ |
-
-## Features
-
-### 🔬 Gate-by-Gate Circuit Walkthrough
-Step through all 5 unitary stages of the protocol (initialisation, Hadamard, CNOT, Bell measurement circuit) with:
-- Interactive step controls (Previous / Next / Reset)
-- Live circuit diagrams
-- 3D Plotly Bloch spheres for every qubit
-- Full statevector amplitude tables
-- Reduced density matrices
-
-### 🎯 Interactive Measurement Outcomes
-Explore all four Bell measurement outcomes:
-- View Bob's state before and after correction
-- Compare Bloch spheres side by side
-- Verify fidelity = 1 for every outcome
-
-### 📊 Measurement Histogram
-Run the full circuit on the Aer simulator with configurable shots (256–4096):
-- Observed vs expected frequency comparison
-- Statistical analysis and shot noise explanation
-
-### ✅ Verification Suite
-Quantitative verification across 8 test states × 4 outcomes = 32 checks:
-- State fidelity F(ρ, σ) calculation
-- Complex-amplitude test states included
-
-### 🌊 Noise Experiment
-Explore how depolarising noise degrades teleportation:
-- Fidelity vs noise rate sweep
-- Individual noisy simulation runs
-- Real noise model (not hardcoded)
-
-### 📚 Learning Section
-Educational content covering:
-- Bell states and entanglement
-- Full mathematical derivation
-- No-cloning theorem explanation
-- Key quantum gates
-
-## Installation
-
-### Prerequisites
-- Python 3.10+
-- macOS (or any platform supporting Qiskit)
-
-### Setup
-
+### 3. Run the Quantum Verification Engine via CLI
+To run the automated verification suite across all 8 cardinal states directly in the terminal:
 ```bash
-# Clone the repository
-git clone https://github.com/mohammedismailmi/quantum-teleportation.git
-cd quantum-teleportation
-
-# Create and activate virtual environment
-python3 -m venv .venv
 source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-## Running the Application
-
-```bash
-# Activate the virtual environment (if not already active)
-source .venv/bin/activate
-
-# Launch the Streamlit app
-streamlit run app.py
-```
-
-The app opens at `http://localhost:8501` in your browser.
-
-## Running Tests
-
-```bash
-# Run the full test suite
-python -m pytest tests/test_teleportation.py -v
-
-# Run the quantum engine verification
 python quantum_teleportation.py
 ```
 
-## Project Structure
-
-```
-quantum-teleportation/
-├── app.py                          # Streamlit web application
-├── quantum_teleportation.py        # Core quantum engine
-├── visualizations.py               # Plotly visualisations
-├── requirements.txt                # Python dependencies
-├── requirements-lock.txt           # Pinned dependency versions
-├── README.md                       # This file
-├── .gitignore                      # Git ignore rules
-└── tests/
-    ├── __init__.py
-    └── test_teleportation.py       # Automated test suite (36 tests)
+### 4. Query Live IBM Quantum Cloud QPUs via CLI
+To check live queue depths and operational statuses of physical IBM Quantum processors:
+```bash
+python quantum_teleportation.py --cloud
 ```
 
-## Screenshots
-
-*Launch the app with `streamlit run app.py` to see the interactive interface.*
-
-## Limitations
-
-- The simulator runs locally using Qiskit Aer — no real quantum hardware is used by default
-- The noise experiment uses a simplified depolarising model
-- Circuit rendering uses matplotlib (static images) rather than interactive SVG
-- Post-measurement stages (5–8) are shown in the Measurement Outcomes tab rather than as statevector snapshots, since measurement collapses the quantum state
-
-## References & Acknowledgements
-
-1. **Bennett et al.** (1993). "Teleporting an unknown quantum state via dual classical and Einstein-Podolsky-Rosen channels." *Physical Review Letters*, 70(13), 1895.
-
-2. **Nielsen & Chuang** (2010). *Quantum Computation and Quantum Information*. Cambridge University Press.
-
-3. **Qiskit Textbook** — Quantum Teleportation tutorial. The circuit structure and verification approach are adapted from the official [Qiskit learning resources](https://learning.quantum.ibm.com/tutorial/quantum-teleportation).
-
-4. **Qiskit SDK Documentation** — [docs.quantum.ibm.com](https://docs.quantum.ibm.com/)
+### 5. Run the Automated Unit Test Suite
+```bash
+python -m pytest tests/test_teleportation.py -v
+```
 
 ---
 
-*Built for IBM Qiskit Fall Fest 2026 at RV University.*
+## 📊 Short Explanation of the Output
+
+When you interact with the simulator or CLI, here is what each output section represents:
+
+1. **Interactive 3D Bloch Sphere & State Coordinates**:
+   - Outputs the exact 3-dimensional Cartesian projection $[x, y, z]$ and spherical angles $(\theta, \phi)$ of Alice's state vector $|\psi\rangle_Q$ on the unit Bloch sphere.
+   - Displays real-time measurement probability bars: $P(|0\rangle) = |\alpha|^2$ and $P(|1\rangle) = |\beta|^2$.
+
+2. **Step-by-Step Protocol Walkthrough (Stages 0–6)**:
+   - Tracks the joint 3-qubit statevector $(Q \otimes M \otimes Y)$ across 7 sequential stages.
+   - Outputs mathematical Dirac bra-ket equations, reduced density matrices $\rho_Q, \rho_M, \rho_Y$, and purity metrics ($Tr(\rho^2) = 1$ for pure states vs $Tr(\rho^2) = 0.5$ for maximally entangled subsystems).
+
+3. **4-Outcome Measurement Decoder**:
+   - Visualizes each of the 4 probabilistic branches (`00`, `01`, `10`, `11`).
+   - Displays Bob's intermediate distorted state and the applied Pauli operator, proving state overlap fidelity $\mathcal{F} = |\langle\psi|\psi_Y\rangle|^2 = 1.000000$ (100.0%) for every branch.
+
+4. **Qiskit Aer Multi-Shot Simulation Histogram**:
+   - Executes the complete circuit using `AerSimulator` across 512 to 8,192 shots.
+   - Outputs a 4-bin histogram showing measured counts and empirical probabilities converging to the theoretical $25\%$ uniform distribution.
+   - Computes a $\chi^2$ (chi-square) goodness-of-fit metric confirming that variance is purely due to quantum shot noise ($\propto 1/\sqrt{N}$).
+
+5. **Realistic Hardware Noise & `ibm_kingston` Calibration Curve**:
+   - Simulates depolarizing noise ($\mathcal{E}_p(\rho)$) and thermal relaxation across error rates from $0\%$ to $20\%$.
+   - Incorporates actual calibration data from the physical 156-qubit **Heron r2** processor (`ibm_kingston`):
+     - $T_1$ relaxation time: $232.01\ \mu\text{s}$
+     - $T_2$ dephasing time: $136.34\ \mu\text{s}$
+     - 2Q (CZ) gate error: $0.196\%$
+     - Readout error: $0.995\%$
+     - Expected realistic QPU fidelity: $\approx 99.41\%$.
+
+6. **Live IBM Quantum Cloud Telemetry & Job Dispatch**:
+   - Connects live to IBM Cloud Quantum Platform using `qiskit-ibm-runtime`.
+   - Displays real-time queue depth (e.g. `ibm_kingston: 4 pending jobs`).
+   - Allows users to transpile circuits into native Heron dynamic basis gates (`cz, rz, sx, x`) and dispatch workloads directly to physical QPUs via `SamplerV2`.
+
+---
+
+## 📁 Repository Structure
+
+```
+quantum-teleportation/
+├── quantum_teleportation.py       # Core quantum engine, math & IBM Cloud QPU integration
+├── server.py                      # FastAPI REST server & SPA static file router
+├── visualizations.py              # Classical plotting and Bloch sphere helpers
+├── requirements.txt               # Python package dependencies
+├── README.md                      # Comprehensive project documentation
+├── tests/
+│   └── test_teleportation.py      # Automated test suite (36 unit tests)
+└── frontend/                      # Responsive React + Vite application
+    ├── index.html                 # Academic HTML shell with KaTeX stylesheets
+    ├── vite.config.js             # Vite configuration with API proxy
+    ├── package.json               # Node.js dependencies
+    └── src/
+        ├── App.jsx                # Main application component & state manager
+        ├── index.css              # Formal publication design system (b1: #1B468C, b2: #00005D)
+        └── components/
+            ├── Header.jsx                 # Formal top navigation bar (zero logos)
+            ├── StatePreparationPanel.jsx  # Complex amplitudes & angle controls
+            ├── BlochSphere3D.jsx          # Interactive 3D HTML5 Canvas Bloch sphere
+            ├── ProtocolWalkthrough.jsx    # 7-stage step-by-step visualizer
+            ├── MeasurementMatrix.jsx      # 4-branch Pauli correction decoder
+            ├── AerSimulatorView.jsx       # Multi-shot Aer histogram & chi-square stats
+            ├── NoiseAnalysisView.jsx      # Hardware noise sweep & Heron r2 calibration
+            ├── CircuitDiagramView.jsx     # Interactive SVG circuit & Qiskit code exporter
+            ├── VerificationSuiteView.jsx  # 8-state automated audit harness
+            ├── TheoryMathView.jsx         # Mathematical derivations & no-cloning proofs
+            ├── IBMCloudLiveView.jsx       # Live IBM Cloud QPU queue & hardware dispatch
+            └── KatexView.jsx              # KaTeX LaTeX renderer (HTML-only mode)
+```
+
+---
+
+## 📜 References & Acknowledgements
+
+1. **Bennett, C. H., et al.** (1993). *Teleporting an unknown quantum state via dual classical and Einstein-Podolsky-Rosen channels*. Physical Review Letters, 70(13), 1895.
+2. **Wootters, W. K., & Zurek, W. H.** (1982). *A single quantum cannot be cloned*. Nature, 299(5886), 802–803.
+3. **Nielsen, M. A., & Chuang, I. L.** (2010). *Quantum Computation and Quantum Information*. Cambridge University Press.
+4. **IBM Quantum & Qiskit Documentation** — [docs.quantum.ibm.com](https://docs.quantum.ibm.com/)
+5. **IBM Qiskit Fall Fest 2026** at RV University.
