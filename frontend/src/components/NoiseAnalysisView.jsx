@@ -259,7 +259,7 @@ export default function NoiseAnalysisView({
               </div>
               <div className="callout-math mt-1">
                 <KatexView
-                  math="\\mathcal{E}_p(\\rho) = (1 - p)\\rho + \\frac{p}{3}\\big(X\\rho X + Y\\rho Y + Z\\rho Z\\big)"
+                  math={String.raw`\mathcal{E}_p(\rho) = (1 - p)\rho + \frac{p}{3}\left(X\rho X + Y\rho Y + Z\rho Z\right)`}
                   block
                 />
               </div>
@@ -303,7 +303,7 @@ export default function NoiseAnalysisView({
             <div className="takeaway-box mt-3">
               <CheckCircle size={14} className="text-b1" />
               <span>
-                <strong>Quantum Advantage Principle:</strong> Any teleportation protocol achieving fidelity <KatexView math="\\mathcal{F} > \\frac{2}{3} \\approx 66.7\\%" /> fundamentally proves non-classical entanglement, exceeding the maximum bound achievable by any classical measurement-and-resynthesis strategy.
+                <strong>Quantum Advantage Principle:</strong> Any teleportation protocol achieving fidelity <KatexView math={String.raw`\mathcal{F} > \frac{2}{3} \approx 66.7\%`} /> fundamentally proves non-classical entanglement, exceeding the maximum bound achievable by any classical measurement-and-resynthesis strategy.
               </span>
             </div>
 

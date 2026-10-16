@@ -140,7 +140,7 @@ export default function AerSimulatorView({
             </div>
 
             <div className="chart-footer-caption">
-              Statistical shot noise decreases as <KatexView math="1/\\sqrt{N_{\\text{shots}}}" />. As shots approach infinity, the probability distribution converges strictly to exactly 25% per Bell state outcome.
+              Statistical shot noise decreases as <KatexView math={String.raw`1/\sqrt{N_{\text{shots}}}`} />. As shots approach infinity, the probability distribution converges strictly to exactly 25% per Bell state outcome.
             </div>
           </div>
 

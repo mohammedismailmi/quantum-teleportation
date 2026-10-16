@@ -1,5 +1,6 @@
 qiskit[visualization]
 qiskit-aer
+qiskit-ibm-runtime
 streamlit
 numpy
 matplotlib
