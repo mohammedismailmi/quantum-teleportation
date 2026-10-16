@@ -28,10 +28,15 @@ Discovered by Bennett, Brassard, Crépeau, Jozsa, Peres, and Wootters (1993), qu
 
 | Alice's Measurement $(c_0, c_1)$ | Bell Projection | Bob's Collapsed State | Bob's Pauli Correction $U$ | Final State $|\psi\rangle_Y$ |
 | :---: | :---: | :---: | :---: | :---: |
+--
 | **`00`** | $|\Phi^+\rangle = \frac{\|00\rangle + \|11\rangle}{\sqrt{2}}$ | $\alpha\|0\rangle + \beta\|1\rangle$ | $I$ (Identity) | $\alpha\|0\rangle + \beta\|1\rangle$ |
+--
 | **`01`** | $|\Psi^+\rangle = \frac{\|01\rangle + \|10\rangle}{\sqrt{2}}$ | $\beta\|0\rangle + \alpha\|1\rangle$ | $X$ (Bit-flip) | $\alpha\|0\rangle + \beta\|1\rangle$ |
+--
 | **`10`** | $|\Phi^-\rangle = \frac{\|00\rangle - \|11\rangle}{\sqrt{2}}$ | $\alpha\|0\rangle - \beta\|1\rangle$ | $Z$ (Phase-flip) | $\alpha\|0\rangle + \beta\|1\rangle$ |
+--
 | **`11`** | $|\Psi^-\rangle = \frac{\|01\rangle - \|10\rangle}{\sqrt{2}}$ | $\beta\|0\rangle - \alpha\|1\rangle$ | $XZ$ (Bit & Phase) | $\alpha\|0\rangle + \beta\|1\rangle$ |
+--
 
 ---
 
