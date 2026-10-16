@@ -594,19 +594,180 @@ def run_verification_suite() -> list[dict]:
     return results
 
 
+# ─── IBM Quantum Cloud Hardware Integration ──────────────────────────────────
+
+IBM_DEFAULT_TOKEN = "fFfXXOtzorYMEnJ_N-OOpMVmYifj4ZmW0GxUJNN4aGCi"
+IBM_DEFAULT_CRN = "crn:v1:bluemix:public:quantum-computing:us-east:a/bebe6d634e114fa49d27f6df3d902c6b:fdbe7491-2d6e-484c-9240-30be98d41891::"
+
+IBM_KINGSTON_CALIBRATION: dict[str, Any] = {
+    "backend_name": "ibm_kingston",
+    "processor_type": "Heron r2",
+    "num_qubits": 156,
+    "region": "us-east (Washington DC)",
+    "t1_median_us": 232.01,
+    "t2_median_us": 136.34,
+    "cz_error_median": 1.961e-3,
+    "sx_error_median": 2.668e-4,
+    "readout_error_median": 9.949e-3,
+    "init_error_median": 2.000e-3,
+}
+
+
+def build_kingston_noise_model() -> NoiseModel:
+    """
+    Build a realistic Qiskit Aer NoiseModel calibrated to ibm_kingston (Heron r2).
+
+    Parameters:
+        T1 = 232.01 µs, T2 = 136.34 µs
+        2-qubit CZ gate error = 0.1961%
+        Single-qubit SX/RZ gate error = 0.0267%
+        Readout error = 0.9949%
+    """
+    from qiskit_aer.noise import ReadoutError
+
+    nm = NoiseModel()
+    cz_err = depolarizing_error(IBM_KINGSTON_CALIBRATION["cz_error_median"], 2)
+    sx_err = depolarizing_error(IBM_KINGSTON_CALIBRATION["sx_error_median"], 1)
+
+    nm.add_all_qubit_quantum_error(cz_err, ["cz", "cx"])
+    nm.add_all_qubit_quantum_error(sx_err, ["sx", "x", "h", "z"])
+
+    ro_prob = IBM_KINGSTON_CALIBRATION["readout_error_median"]
+    ro_err = ReadoutError([[1 - ro_prob, ro_prob], [ro_prob, 1 - ro_prob]])
+    nm.add_all_qubit_readout_error(ro_err)
+
+    return nm
+
+
+def get_ibm_service(
+    token: str | None = None,
+    instance: str | None = None,
+    channel: str = "ibm_cloud",
+) -> Any:
+    """Initialize QiskitRuntimeService with user credentials or saved account."""
+    from qiskit_ibm_runtime import QiskitRuntimeService
+
+    try:
+        return QiskitRuntimeService(name="default-cloud")
+    except Exception:
+        pass
+
+    tok = token or IBM_DEFAULT_TOKEN
+    inst = instance or IBM_DEFAULT_CRN
+    return QiskitRuntimeService(channel=channel, token=tok, instance=inst)
+
+
+def query_cloud_backends(service: Any = None) -> list[dict]:
+    """Retrieve available IBM Quantum Cloud hardware backends and queue depth."""
+    if service is None:
+        service = get_ibm_service()
+
+    results = []
+    for b in service.backends():
+        st = b.status()
+        results.append({
+            "name": b.name,
+            "num_qubits": b.num_qubits,
+            "operational": bool(st.operational),
+            "pending_jobs": int(st.pending_jobs),
+            "status_msg": str(st.status_msg),
+            "processor_type": "Heron r2" if "kingston" in b.name or "marrakesh" in b.name else "Eagle",
+        })
+    return results
+
+
+def submit_cloud_teleportation(
+    alpha: complex = 0.6 + 0j,
+    beta: complex = 0.8 + 0j,
+    backend_name: str = "ibm_kingston",
+    shots: int = 1024,
+    service: Any = None,
+) -> dict:
+    """
+    Transpile and submit the teleportation protocol to a real physical IBM Quantum QPU.
+
+    Returns a dict with 'job_id', 'status', 'backend', and 'shots'.
+    """
+    from qiskit import transpile
+    from qiskit_ibm_runtime import SamplerV2
+
+    if service is None:
+        service = get_ibm_service()
+
+    alpha, beta = normalize_state(alpha, beta)
+    backend = service.backend(backend_name)
+    qc = create_teleportation_circuit(alpha, beta)
+
+    # Transpile circuit to physical QPU basis gates (Heron r2 uses CZ entangling gates)
+    isa_circuit = transpile(qc, backend=backend, optimization_level=1)
+
+    sampler = SamplerV2(mode=backend)
+    job = sampler.run([isa_circuit], shots=shots)
+
+    return {
+        "job_id": job.job_id(),
+        "backend": backend_name,
+        "status": str(job.status()),
+        "shots": shots,
+        "alpha": alpha,
+        "beta": beta,
+    }
+
+
+def retrieve_cloud_job_results(job_id: str, service: Any = None) -> dict:
+    """Fetch status and counts of a submitted IBM Quantum cloud job."""
+    if service is None:
+        service = get_ibm_service()
+
+    job = service.job(job_id)
+    status_str = str(job.status())
+    b_name = job.backend().name if job.backend() else "unknown"
+
+    counts: dict[str, int] = {}
+    if status_str == "DONE":
+        try:
+            res = job.result()
+            pub_result = res[0]
+            if hasattr(pub_result.data, "meas"):
+                counts = pub_result.data.meas.get_counts()
+        except Exception as e:
+            counts = {"error": str(e)}
+
+    return {
+        "job_id": job_id,
+        "backend": b_name,
+        "status": status_str,
+        "creation_date": str(job.creation_date),
+        "counts": counts,
+    }
+
+
 # ─── CLI entry point ──────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    print("Quantum Teleportation Engine — Verification Suite")
-    print("=" * 55)
+    import sys
 
-    suite = run_verification_suite()
-    for v in suite:
-        status = "✓ PASS" if v["all_passed"] else "✗ FAIL"
-        print(f"\n{status}  {v['state_name']}")
-        for d in v["details"]:
-            print(f"    Outcome {d['outcome']}: fidelity = {d['fidelity']:.8f}")
+    print("Quantum Teleportation Engine — Verification & QPU Suite")
+    print("=" * 60)
 
-    print("\n" + "=" * 55)
-    all_ok = all(v["all_passed"] for v in suite)
-    print(f"Overall: {'ALL PASSED ✓' if all_ok else 'SOME FAILED ✗'}")
+    if "--cloud" in sys.argv:
+        print("\nQuerying IBM Quantum Cloud Fleet...")
+        try:
+            backends = query_cloud_backends()
+            for b in backends:
+                print(f"  • {b['name']} ({b['processor_type']}, {b['num_qubits']}Q): "
+                      f"Operational={b['operational']}, Pending Jobs={b['pending_jobs']}")
+        except Exception as err:
+            print(f"Cloud connection failed: {err}")
+    else:
+        suite = run_verification_suite()
+        for v in suite:
+            status = "✓ PASS" if v["all_passed"] else "✗ FAIL"
+            print(f"\n{status}  {v['state_name']}")
+            for d in v["details"]:
+                print(f"    Outcome {d['outcome']}: fidelity = {d['fidelity']:.8f}")
+
+        print("\n" + "=" * 60)
+        all_ok = all(v["all_passed"] for v in suite)
+        print(f"Overall: {'ALL PASSED ✓' if all_ok else 'SOME FAILED ✗'}")
+        print("\nTip: Run with --cloud to query live IBM Quantum hardware backends.")

@@ -1,19 +1,28 @@
-# ⚛️ Quantum Teleportation — From Alice to Bob
+# Quantum Teleportation — From Alice to Bob
 
-> An interactive quantum teleportation simulator built with Python, Qiskit, and Streamlit for the **IBM Qiskit Fall Fest 2026** at RV University.
+Formal interactive educational quantum teleportation application built with **React**, **FastAPI**, and **IBM Qiskit / Qiskit Aer**.
 
-## Overview
+Designed with a formal publication-grade blue and white theme:
+- Primary Navy Blue `b1`: `rgb(27, 70, 140)` (`#1B468C`)
+- Deep Imperial Navy Blue `b2`: `rgb(0, 0, 93)` (`#00005D`)
+- Pure Crisp White: `#FFFFFF`
+- Pure academic typography with zero logos.
 
-This application is a complete, interactive educational lab that demonstrates the **quantum teleportation protocol** — the process of transferring an unknown quantum state from one qubit (Alice) to another (Bob) using entanglement and classical communication.
+## Quickstart
 
-The simulator:
-- **Executes real quantum circuits** using Qiskit and the Aer simulator
-- **Computes exact statevectors** at every stage of the protocol
-- **Visualises Bloch spheres** from actual reduced density matrices
-- **Verifies correctness** with state fidelity calculations
-- **Explores noise effects** with configurable depolarising error models
+### 1. Run the Full-Stack Application
+```bash
+# Start the FastAPI computational backend (serves both API & React SPA on port 8000)
+.venv/bin/uvicorn server:app --host 127.0.0.1 --port 8000 --reload
+```
+Open **`http://localhost:8000`** in your browser.
 
-No IBM Quantum API key is required — everything runs locally.
+### 2. Optional: Run Vite Frontend in Development Mode
+```bash
+cd frontend
+npm run dev
+```
+Open **`http://localhost:5173`** with hot module replacement (HMR).
 
 ## The Quantum Teleportation Protocol
 

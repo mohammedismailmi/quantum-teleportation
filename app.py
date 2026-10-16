@@ -617,7 +617,7 @@ with tab_outcomes:
             )
             bvec_before = amplitudes_to_bloch(oc["bob_before"][0], oc["bob_before"][1])
             fig_before = create_bloch_sphere(bvec_before, "Before Correction", True, 260, 290)
-            st.plotly_chart(fig_before, width="stretch")
+            st.plotly_chart(fig_before, width="stretch", key=f"bloch_before_{oc['bits_str']}")
 
         with col_arrow:
             st.markdown("")
@@ -639,7 +639,7 @@ with tab_outcomes:
             )
             bvec_after = amplitudes_to_bloch(oc["bob_after"][0], oc["bob_after"][1])
             fig_after = create_bloch_sphere(bvec_after, "After Correction", True, 260, 290)
-            st.plotly_chart(fig_after, width="stretch")
+            st.plotly_chart(fig_after, width="stretch", key=f"bloch_after_{oc['bits_str']}")
 
         # Fidelity
         fid_color = GREEN if np.isclose(oc["fidelity"], 1.0, atol=1e-6) else AMBER
