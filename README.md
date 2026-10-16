@@ -1,13 +1,12 @@
 # Quantum Teleportation — From Alice to Bob
 ### Interactive Educational Simulator & Real IBM Quantum Hardware Telemetry
 
-> A formal, publication-grade interactive quantum application built for the **IBM Qiskit Fall Fest 2026 at RV University**. Powered by **React**, **FastAPI**, **Qiskit 1.x**, and **Qiskit Aer**, with live integration to physical IBM Quantum QPUs (`ibm_kingston`, `ibm_marrakesh`, `ibm_fez`).
+> A formal, publication-grade interactive quantum application built for the **IBM Qiskit Fall Fest 2026 at RV University**. Powered by **React**, **FastAPI**, **Qiskit**, and **Qiskit Aer**, with live integration to physical IBM Quantum QPUs (`ibm_kingston`, `ibm_marrakesh`, `ibm_fez`).
 
 ---
 
 ## 👥 Team Members
-- **Mohammed Ismail** ([@mohammedismailmi](https://github.com/mohammedismailmi)) — *Project Lead & Quantum Software Engineer*
-- **RV University Qiskit Fall Fest Team**
+- **Mohammed Ismail** 1RVU23CSE280 ([@mohammedismailmi](https://github.com/mohammedismailmi)) — *Project Lead & Developer* 
 
 ---
 
