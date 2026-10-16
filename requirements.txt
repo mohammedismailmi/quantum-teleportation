@@ -1,3 +1,7 @@
 qiskit[visualization]
 qiskit-aer
 streamlit
+numpy
+matplotlib
+plotly
+pytest
