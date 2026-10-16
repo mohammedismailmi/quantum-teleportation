@@ -336,7 +336,7 @@ with st.sidebar:
         (bx, by, bz), title="Message Qubit Q", pure=True,
         width=280, height=300,
     )
-    st.plotly_chart(fig_sidebar, use_container_width=True)
+    st.plotly_chart(fig_sidebar, width="stretch")
 
     st.markdown('<div class="gradient-divider"></div>', unsafe_allow_html=True)
 
@@ -494,7 +494,7 @@ with tab_circuit:
     st.markdown("#### 🔌 Circuit at this Stage")
     try:
         circuit_png = draw_stage_circuit_png(alpha, beta, stage_idx)
-        st.image(circuit_png, use_container_width=True)
+        st.image(circuit_png, width="stretch")
     except Exception as e:
         st.warning(f"Circuit rendering: {e}")
 
@@ -514,7 +514,7 @@ with tab_circuit:
                 width=300,
                 height=340,
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
             # State info
             vec_len = np.sqrt(sum(x**2 for x in bvec))
@@ -530,11 +530,11 @@ with tab_circuit:
     if sv_table:
         import pandas as pd
         df = pd.DataFrame(sv_table)
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(df, width="stretch", hide_index=True)
 
     # Statevector amplitude chart
     fig_sv = create_statevector_bar(s["statevector"])
-    st.plotly_chart(fig_sv, use_container_width=True)
+    st.plotly_chart(fig_sv, width="stretch")
 
     # Reduced density matrices
     with st.expander("🔬 Reduced Density Matrices"):
@@ -543,7 +543,7 @@ with tab_circuit:
             with col:
                 rdm = s["reduced_dm"][qi]
                 fig_dm = create_density_matrix_plot(rdm, title=f"ρ_{qubit_names[qi]}")
-                st.plotly_chart(fig_dm, use_container_width=True)
+                st.plotly_chart(fig_dm, width="stretch")
 
     # Post-measurement stages (5-8) - shown after stage 4
     if stage_idx == max_stage:
@@ -617,7 +617,7 @@ with tab_outcomes:
             )
             bvec_before = amplitudes_to_bloch(oc["bob_before"][0], oc["bob_before"][1])
             fig_before = create_bloch_sphere(bvec_before, "Before Correction", True, 260, 290)
-            st.plotly_chart(fig_before, use_container_width=True)
+            st.plotly_chart(fig_before, width="stretch")
 
         with col_arrow:
             st.markdown("")
@@ -639,7 +639,7 @@ with tab_outcomes:
             )
             bvec_after = amplitudes_to_bloch(oc["bob_after"][0], oc["bob_after"][1])
             fig_after = create_bloch_sphere(bvec_after, "After Correction", True, 260, 290)
-            st.plotly_chart(fig_after, use_container_width=True)
+            st.plotly_chart(fig_after, width="stretch")
 
         # Fidelity
         fid_color = GREEN if np.isclose(oc["fidelity"], 1.0, atol=1e-6) else AMBER
@@ -690,7 +690,7 @@ with tab_histogram:
 
         # Histogram
         fig_hist = create_histogram(counts, sim["shots"])
-        st.plotly_chart(fig_hist, use_container_width=True)
+        st.plotly_chart(fig_hist, width="stretch")
 
         # Detailed results
         st.markdown("### 📈 Detailed Results")
@@ -713,7 +713,7 @@ with tab_histogram:
             })
 
         df = pd.DataFrame(rows)
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(df, width="stretch", hide_index=True)
 
         st.markdown(f"""
         <div class="info-card">
@@ -731,7 +731,7 @@ with tab_histogram:
         with st.expander("🔌 Full Teleportation Circuit"):
             try:
                 full_png = draw_circuit_png(sim["circuit"])
-                st.image(full_png, use_container_width=True)
+                st.image(full_png, width="stretch")
             except Exception as e:
                 st.code(sim["circuit"].draw(output="text"))
     else:
@@ -766,7 +766,7 @@ with tab_verify:
             amplitudes_to_bloch(alpha, beta),
             "Original |ψ⟩", True, 280, 320,
         )
-        st.plotly_chart(fig_orig, use_container_width=True)
+        st.plotly_chart(fig_orig, width="stretch")
 
     with col_result:
         st.markdown("**Reconstructed state (outcome 00):**")
@@ -779,7 +779,7 @@ with tab_verify:
             amplitudes_to_bloch(oc00["bob_after"][0], oc00["bob_after"][1]),
             "Reconstructed |ψ'⟩", True, 280, 320,
         )
-        st.plotly_chart(fig_recon, use_container_width=True)
+        st.plotly_chart(fig_recon, width="stretch")
 
     # Outcome-by-outcome table
     import pandas as pd
@@ -791,7 +791,7 @@ with tab_verify:
             "Status": "✓ Pass" if d["passed"] else "✗ Fail",
         })
     df_v = pd.DataFrame(v_rows)
-    st.dataframe(df_v, use_container_width=True, hide_index=True)
+    st.dataframe(df_v, width="stretch", hide_index=True)
 
     overall_status = "success-card" if v["all_passed"] else "error-card"
     overall_text = "✓ All outcomes produce perfect fidelity!" if v["all_passed"] else "✗ Some outcomes have imperfect fidelity"
@@ -828,7 +828,7 @@ with tab_verify:
                 })
 
         df_suite = pd.DataFrame(suite_rows)
-        st.dataframe(df_suite, use_container_width=True, hide_index=True)
+        st.dataframe(df_suite, width="stretch", hide_index=True)
 
         if all_pass:
             st.markdown(f"""
@@ -901,21 +901,21 @@ with tab_noise:
     if "noise_results" in st.session_state:
         st.markdown("### 📉 Fidelity vs Noise Rate")
         fig_noise = create_noise_fidelity_plot(st.session_state.noise_results)
-        st.plotly_chart(fig_noise, use_container_width=True)
+        st.plotly_chart(fig_noise, width="stretch")
 
         import pandas as pd
         noise_rows = [{
             "Noise Rate": f"{r['noise_rate']:.3f}",
             "Distribution Fidelity": f"{r['distribution_fidelity']:.4f}",
         } for r in st.session_state.noise_results]
-        st.dataframe(pd.DataFrame(noise_rows), use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(noise_rows), width="stretch", hide_index=True)
 
     if "noisy_sim" in st.session_state:
         ns = st.session_state.noisy_sim
         st.markdown(f"### 📊 Noisy Histogram (p = {ns['noise_rate']:.3f})")
         fig_noisy = create_histogram(ns["counts"], ns["shots"],
                                       title=f"Noisy Measurement (p={ns['noise_rate']:.3f})")
-        st.plotly_chart(fig_noisy, use_container_width=True)
+        st.plotly_chart(fig_noisy, width="stretch")
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

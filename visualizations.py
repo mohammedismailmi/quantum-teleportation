@@ -253,13 +253,13 @@ def create_histogram(
         title=dict(text=f"<b>{title}</b>", font=dict(color=TEXT, size=16), x=0.5),
         xaxis=dict(
             title="Measurement Outcome (c₁c₀)",
-            titlefont=dict(color=TEXT),
+            title_font=dict(color=TEXT),
             tickfont=dict(color=TEXT, size=13),
             gridcolor=GRID,
         ),
         yaxis=dict(
             title="Probability",
-            titlefont=dict(color=TEXT),
+            title_font=dict(color=TEXT),
             tickfont=dict(color=TEXT),
             gridcolor=GRID,
             range=[0, max(probs + [expected_prob]) * 1.25],
@@ -350,13 +350,13 @@ def create_statevector_bar(sv: np.ndarray, n_qubits: int = 3) -> go.Figure:
         xaxis=dict(
             title="Basis State (Q M Y)",
             tickfont=dict(color=TEXT, size=11),
-            titlefont=dict(color=TEXT),
+            title_font=dict(color=TEXT),
             gridcolor=GRID,
         ),
         yaxis=dict(
             title="Amplitude",
             tickfont=dict(color=TEXT),
-            titlefont=dict(color=TEXT),
+            title_font=dict(color=TEXT),
             gridcolor=GRID,
         ),
         barmode="group",
@@ -493,13 +493,13 @@ def create_noise_fidelity_plot(results: list[dict]) -> go.Figure:
         ),
         xaxis=dict(
             title="Depolarising Error Rate",
-            titlefont=dict(color=TEXT),
+            title_font=dict(color=TEXT),
             tickfont=dict(color=TEXT),
             gridcolor=GRID,
         ),
         yaxis=dict(
             title="Distribution Fidelity",
-            titlefont=dict(color=TEXT),
+            title_font=dict(color=TEXT),
             tickfont=dict(color=TEXT),
             gridcolor=GRID,
             range=[0, 1.05],
@@ -537,7 +537,7 @@ def create_density_matrix_plot(dm: np.ndarray, title: str = "Density Matrix") ->
         showscale=True,
         colorbar=dict(
             title="Magnitude",
-            titlefont=dict(color=TEXT),
+            title_font=dict(color=TEXT),
             tickfont=dict(color=TEXT),
         ),
     ))
