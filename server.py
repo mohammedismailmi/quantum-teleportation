@@ -7,6 +7,16 @@ noisy hardware simulation, step-by-step protocol states, and verification suites
 
 from __future__ import annotations
 
+import ctypes
+import os
+import sys
+
+# Safeguard against glibc static TLS allocation errors with OpenMP/qiskit-aer
+try:
+    ctypes.CDLL("libgomp.so.1", mode=ctypes.RTLD_GLOBAL)
+except Exception:
+    pass
+
 import io
 import math
 from typing import Any

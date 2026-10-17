@@ -11,9 +11,10 @@ RUN npm run build
 FROM python:3.11-slim
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies including libgomp for OpenMP support
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python requirements
@@ -24,9 +25,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
+# Ensure entrypoint script is executable
+RUN chmod +x ./entrypoint.sh
+
 # Expose default port
 EXPOSE 8000
 ENV PORT=8000
 
-# Run FastAPI server
-CMD uvicorn server:app --host 0.0.0.0 --port ${PORT}
+# Run FastAPI server via entrypoint script
+CMD ["./entrypoint.sh"]
