@@ -16,27 +16,17 @@ The interactive platform is fully deployed and accessible from any desktop, tabl
 
 ---
 
+## 👥 Team Members
+- **Mohammed Ismail** 1RVU23CSE280 ([@mohammedismailmi](https://github.com/mohammedismailmi)) — *Project Lead & Developer* 
+
+---
+
 ## 🎥 Video Presentation & Walkthrough
 
 A complete, comprehensive video presentation explaining the theoretical physics, circuit architecture, mathematical proofs, and live simulator demonstration is available directly in the repository:
 
-### 🎬 **[▶️ QT Presentation.mp4](./QT%20Presentation.mp4)**
-- **Title:** Quantum Teleportation — From Alice to Bob (Presentation & Live Demo)
-- **File:** `QT Presentation.mp4`
-- **Duration:** 12 minutes, 38 seconds
-- **Resolution:** 1080p Full HD (60 fps)
-- **Key Highlights Covered in the Video:**
-  1. **Foundational Physics:** The No-Cloning Theorem, EPR entanglement, and relativistic no-signaling causality ($v \le c$).
-  2. **Step-by-Step Protocol Breakdown:** Initial state preparation, Bell pair creation, joint Bell-basis projection, and Alice's measurement.
-  3. **Unitary Feed-Forward Decoding:** Demonstration of all 4 Pauli correction branches ($I, X, Z, XZ$) achieving 100% mathematical fidelity.
-  4. **Qiskit Aer Simulation:** Statistical multi-shot histogram analysis and $\chi^2$ test.
-  5. **Realistic Hardware Noise Sweep:** Depolarizing noise analysis with calibrated `ibm_kingston` (Heron r2) coherence times ($T_1, T_2$).
-  6. **Live IBM Quantum Cloud Telemetry:** Live fleet queries and job dispatch to physical dilution-refrigerator QPUs.
-
----
-
-## 👥 Team Members
-- **Mohammed Ismail** 1RVU23CSE280 ([@mohammedismailmi](https://github.com/mohammedismailmi)) — *Project Lead & Developer* 
+### 🎬 **[▶️ QT Presentation.mp4](https://drive.google.com/file/d/1V0f7Lv0dZylpS_gmTPDzRp46qwBCvG0R/view?usp=sharing)**
+- **Title:** Presentation & Live Dem
 
 ---
 
