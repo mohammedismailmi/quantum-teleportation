@@ -5,6 +5,36 @@
 
 ---
 
+## 🌐 Live Web Application
+
+The interactive platform is fully deployed and accessible from any desktop, tablet, or mobile browser worldwide:
+
+### 👉 **[https://quantum-teleportation-qae8.onrender.com/](https://quantum-teleportation-qae8.onrender.com/)**
+
+- **Instant Cloud Access:** No Python, Node.js, or local installation required.
+- **Full Capabilities:** Includes interactive 3D Bloch sphere, 7-stage protocol walkthrough, multi-shot Aer simulator, hardware noise sweep, and live IBM Cloud Quantum telemetry.
+
+---
+
+## 🎥 Video Presentation & Walkthrough
+
+A complete, comprehensive video presentation explaining the theoretical physics, circuit architecture, mathematical proofs, and live simulator demonstration is available directly in the repository:
+
+### 🎬 **[▶️ QT Presentation.mp4](./QT%20Presentation.mp4)**
+- **Title:** Quantum Teleportation — From Alice to Bob (Presentation & Live Demo)
+- **File:** `QT Presentation.mp4`
+- **Duration:** 12 minutes, 38 seconds
+- **Resolution:** 1080p Full HD (60 fps)
+- **Key Highlights Covered in the Video:**
+  1. **Foundational Physics:** The No-Cloning Theorem, EPR entanglement, and relativistic no-signaling causality ($v \le c$).
+  2. **Step-by-Step Protocol Breakdown:** Initial state preparation, Bell pair creation, joint Bell-basis projection, and Alice's measurement.
+  3. **Unitary Feed-Forward Decoding:** Demonstration of all 4 Pauli correction branches ($I, X, Z, XZ$) achieving 100% mathematical fidelity.
+  4. **Qiskit Aer Simulation:** Statistical multi-shot histogram analysis and $\chi^2$ test.
+  5. **Realistic Hardware Noise Sweep:** Depolarizing noise analysis with calibrated `ibm_kingston` (Heron r2) coherence times ($T_1, T_2$).
+  6. **Live IBM Quantum Cloud Telemetry:** Live fleet queries and job dispatch to physical dilution-refrigerator QPUs.
+
+---
+
 ## 👥 Team Members
 - **Mohammed Ismail** 1RVU23CSE280 ([@mohammedismailmi](https://github.com/mohammedismailmi)) — *Project Lead & Developer* 
 
@@ -98,12 +128,27 @@ python quantum_teleportation.py
 ```
 
 ### 4. Query Live IBM Quantum Cloud QPUs via CLI
-To check live queue depths and operational statuses of physical IBM Quantum processors:
+Check live operational status, qubit counts, and queue depth across physical IBM QPUs:
 ```bash
 python quantum_teleportation.py --cloud
 ```
 
-### 5. Run the Automated Unit Test Suite
+### 5. Submit Circuit to Real Physical IBM Quantum Hardware via CLI
+Transpile and dispatch the quantum teleportation circuit directly to `ibm_kingston` (156-qubit Heron r2):
+```bash
+python quantum_teleportation.py --submit
+# Or specify a different backend:
+python quantum_teleportation.py --submit --backend=ibm_marrakesh
+```
+
+### 6. View Your Recent IBM Quantum Cloud Jobs via CLI
+Fetch the status, backend, and creation timestamps of your cloud jobs:
+```bash
+python quantum_teleportation.py --jobs
+```
+
+### 7. Run the Automated Unit Test Suite
+Execute all 36 verification and fidelity tests:
 ```bash
 python -m pytest tests/test_teleportation.py -v
 ```
@@ -151,9 +196,13 @@ When you interact with the simulator or CLI, here is what each output section re
 
 ```
 quantum-teleportation/
+├── QT Presentation.mp4            # Full 12m 38s video walkthrough & presentation (1080p)
 ├── quantum_teleportation.py       # Core quantum engine, math & IBM Cloud QPU integration
 ├── server.py                      # FastAPI REST server & SPA static file router
 ├── visualizations.py              # Classical plotting and Bloch sphere helpers
+├── Dockerfile                     # Multi-stage production container build
+├── render.yaml                    # One-click cloud deployment blueprint
+├── entrypoint.sh                  # OpenMP TLS preloader for Qiskit Aer
 ├── requirements.txt               # Python package dependencies
 ├── README.md                      # Comprehensive project documentation
 ├── tests/
