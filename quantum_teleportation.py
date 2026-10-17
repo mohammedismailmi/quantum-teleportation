@@ -733,8 +733,8 @@ def run_verification_suite() -> list[dict]:
 from qiskit_ibm_runtime import QiskitRuntimeService
 
 # Save your API key and crn and have access to the quantum computers
-your_api_key = "fFfXXOtzorYMEnJ_N-OOpMVmYifj4ZmW0GxUJNN4aGCi"
-your_crn = "crn:v1:bluemix:public:quantum-computing:us-east:a/bebe6d634e114fa49d27f6df3d902c6b:fdbe7491-2d6e-484c-9240-30be98d41891::"
+your_api_key = "deleteThisAndPasteYourAPIKeyHere"
+your_crn = "deleteThisAndPasteYourCRNHere"
 
 try:
     QiskitRuntimeService.save_account(
