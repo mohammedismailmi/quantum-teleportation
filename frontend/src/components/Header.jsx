@@ -35,9 +35,9 @@ export default function Header({
         <div className="header-brand-group">
           {/* Strict rule: NO LOGO */}
           <div className="formal-title-container">
-            <h1 className="formal-main-title">QUANTUM TELEPORTATION PROTOCOL</h1>
+            <h1 className="formal-main-title">QUANTUM TELEPORTATION SIMULATOR</h1>
             <span className="formal-sub-title">
-              From Alice to Bob • Formal Interactive Quantum Simulator & Verification Engine
+              From Alice to Bob • Interactive Quantum Simulator & Verification Engine
             </span>
           </div>
         </div>
