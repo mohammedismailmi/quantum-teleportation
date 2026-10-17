@@ -390,8 +390,8 @@ def get_ibm_service() -> QiskitRuntimeService:
     except Exception:
         return QiskitRuntimeService(
             channel="ibm_cloud",
-            token="fFfXXOtzorYMEnJ_N-OOpMVmYifj4ZmW0GxUJNN4aGCi",
-            instance="crn:v1:bluemix:public:quantum-computing:us-east:a/bebe6d634e114fa49d27f6df3d902c6b:fdbe7491-2d6e-484c-9240-30be98d41891::",
+            token="deleteThisAndPasteYourAPIKeyHere",
+            instance="deleteThisAndPasteYourCRNHere",
         )
 
 
