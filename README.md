@@ -26,7 +26,7 @@ The interactive platform is fully deployed and accessible from any desktop, tabl
 A complete, comprehensive video presentation explaining the theoretical physics, circuit architecture, mathematical proofs, and live simulator demonstration is available directly in the repository:
 
 ### 🎬 **[▶️ QT Presentation.mp4](https://drive.google.com/file/d/1V0f7Lv0dZylpS_gmTPDzRp46qwBCvG0R/view?usp=sharing)**
-- **Title:** Presentation & Live Demo
+- **Title:** Presentation & Live Demo (Google Drive link)
 
 ---
 
@@ -138,7 +138,7 @@ python quantum_teleportation.py --jobs
 ```
 
 ### 7. Run the Automated Unit Test Suite
-Execute all 36 verification and fidelity tests:
+Execute all 29 verification and fidelity tests:
 ```bash
 python -m pytest tests/test_teleportation.py -v
 ```
@@ -225,6 +225,27 @@ quantum-teleportation/
             ├── IBMCloudLiveView.jsx       # Live IBM Cloud QPU queue & hardware dispatch
             └── KatexView.jsx              # KaTeX LaTeX renderer (HTML-only mode)
 ```
+
+---
+
+## ⚠️ Limitations & What I Learned
+
+### Limitations
+- **Hardware noise:** On `ibm_kingston` (1024 shots) the four outcomes were not the ideal ~256 each. Counts ranged from 156 (`00`) to 396 (`11`), while the Aer simulator converges to ~25% per outcome. Gate errors, readout errors and decoherence on a real QPU cause this gap.
+- **Simulator is not hardware:** Aer results are noise-free unless a noise model is added. The noise sweep and the `ibm_kingston` calibration values (T1 ≈ 232 µs, T2 ≈ 136 µs, CZ error ≈ 0.196%, readout error ≈ 0.995%) only approximate real behaviour.
+- **Small experiment:** Hardware results come from a single 1024-shot job. Repeated runs and error mitigation would give a stronger comparison.
+- **One qubit, not a network:** This teleports one qubit between two neighbouring qubits on the same chip, not across a real distance.
+
+### What I Learned
+- Teleportation transfers a quantum state without copying it. This is consistent with the no-cloning theorem. The state is destroyed on Alice's side, and only 2 classical bits are sent.
+- The protocol works only when Bob applies the correct Pauli correction (`I`, `X`, `Z` or `XZ`) for Alice's measurement result. In the simulator this gives fidelity 1.0 for every branch.
+- The circuit that runs on hardware looks very different from the textbook one. Transpilation into native gates (`cz`, `rz`, `sx`, `x`) and mid-circuit measurement with conditional corrections (feed-forward) are needed.
+- Ideal simulation and real hardware can differ a lot, so results from the two must always be labelled separately.
+
+### What I Would Improve Next
+- Run more shots and repeat on several backends (`ibm_fez`, `ibm_marrakesh`).
+- Add error mitigation and compare mitigated vs. raw hardware results.
+- Measure the output state fidelity on hardware instead of only checking the outcome counts.
 
 ---
 
