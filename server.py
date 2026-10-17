@@ -12,6 +12,12 @@ import os
 import sys
 
 # Safeguard against glibc static TLS allocation errors with OpenMP/qiskit-aer
+import glob
+for _lib in glob.glob("/usr/local/lib/python*/site-packages/qiskit_aer.libs/libgomp*.so*"):
+    try:
+        ctypes.CDLL(_lib, mode=ctypes.RTLD_GLOBAL)
+    except Exception:
+        pass
 try:
     ctypes.CDLL("libgomp.so.1", mode=ctypes.RTLD_GLOBAL)
 except Exception:
