@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: quantum-teleportation
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 10000
